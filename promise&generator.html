@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>promise 和 生成器</title>
+</head>
+<body>
+    <div id="subTree">
+        <form action=""><input type="text"></form>
+        <p>para</p>
+        <span>Span</span>
+    </div>
+</body>
+<script>
+    /*
+        asnyc(
+            function*(){
+                try{
+                    const ninjas = yield getJSON("ninjia.json");
+                    const missions = yield getJSON(ninjas[0].missionsUrl);
+                    const missionDescription = yield getJSON(missions[0].detailsUrl);
+                }
+                catch(e){
+
+                }
+            }
+        )
+    */
+    //first try with gen
+    function* WeaponGenerator(){
+        yield "kkk";
+        yield "jjj";
+        yield " mmm";
+    }
+    for( let weapon of WeaponGenerator()){
+        console.log(weapon!==undefined,weapon);
+    }
+    const weaponsIterator = WeaponGenerator();
+    const result1 = weaponsIterator.next();
+    console.log(typeof result1==="object",result1.value ==='kkk',!result1.done,"kkk received");
+    const result2 = weaponsIterator.next();
+    console.log(typeof result2==="object",result2.value ==='jjj',!result2.done,"jjj received");
+    const result3 = weaponsIterator.next();
+    console.log(typeof result3==="object",result3.value ===' mmm',!result3.done,"no result");
+
+    //add another gen function in one gen function
+    function* WarriorGen(){
+        yield "sun";
+        yield* NinjaGen();
+        yield "ggg";
+    }
+    function* NinjaGen(){
+        yield "hhh";
+        yield "fff";
+    }
+    for(let w of WarriorGen()){
+        console.log(w!=null,w);
+    }
+    //gen id 
+    function* IdGen(){
+        let id = 0;
+        while(true){
+            yield ++id;
+        }
+    }
+    const idIterator = IdGen();
+    const ninja1 = idIterator.next().value;
+    const ninja2 = idIterator.next().value;
+    const ninja3 = idIterator.next().value;
+    console.log(ninja1,ninja2,ninja3);
+    //using gen to traverse dom tree
+
+    function* traverseDom(elem){
+        yield elem;
+       
+        elem = elem.children[0];
+        while(elem){
+            yield* traverseDom(elem);
+                elem = elem.nextElementSibling;
+            
+        }
+    }
+    const subtree = document.getElementById("subTree");
+    for(let elem of traverseDom(subtree)){
+        console.log(elem,elem!==null);
+    }
+    //gen function send & received data
+    function * NinjaGen1(action){
+        const imposter = yield("hello:" + action);
+        console.log(imposter ==="Hanzo","generator ha sbeen infiltrated");
+        yield ("Yoshi ("+imposter+")"+action);
+    }
+    const ninjia1Iter = NinjaGen1("skulk");
+    const reault11 = ninjia1Iter.next();
+    const result22 = ninjia1Iter.next("Hanzo");
+</script>
+</html>
