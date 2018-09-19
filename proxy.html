@@ -102,5 +102,25 @@
     catch(e){
         console.log("failed:",e);
     }
+    //使用代理实现数组负索引
+    function createNegativeArrayProxy(array){
+        if(!Array.isArray(array)){
+            throw new TypeError('expected an array');
+        }
+        return new Proxy(array,{
+            get:(target,index)=>{
+                index = +index;
+                return target[index<0? target.length +index :index];
+            },
+            set:(target,index,val)=>{
+                index = +index;
+                return target[index<0 ?target.length +index :index]=val;
+            }
+        })
+    }
+    const test_array = ["Yoshi","Kuma","Hattori","hhhh","gggg"];
+    const array_proxy = createNegativeArrayProxy(test_array);
+    console.log(test_array[0],test_array[1],test_array[2]);
+    console.log(array_proxy[-1],array_proxy[-2],array_proxy[-3])
 </script>
 </html>
