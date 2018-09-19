@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Proxy</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const emperor = {name:"komei"};
+    const representative = new Proxy(emperor,{
+        get:(target,key)=>{
+            console.log("reading:"+key+" through a proxy");
+            return key in target ? target[key]:"don't borther emperor"
+        },
+        set:(target,key,value)=>{
+            console.log("writing:"+key+" through a proxy");
+            target[key] = value;
+        }
+    })
+    console.log(emperor.name ==="komei","the emperor's name is komei");
+    console.log(representative.name ==="komei","get the name property through a proxy)")
+    representative.nickname = "fuck";
+    console.log(representative.nickname);
+</script>
+</html>
