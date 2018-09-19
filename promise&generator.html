@@ -126,5 +126,12 @@
             console.log(ninjas)
         }).catch(e => fail("shouldn't be here:"+e));
     
+    //chain function
+    getJSON("data/ninjas.json")
+        .then(ninjas=>getJSON(ninjas[0].missionUrl))
+        .then(missions=>getJSON(mission[0].detailUrl))
+        .then(mission=>console.log(mission!==null,mission))
+        .catch(error=>console.log("an error countered"));
+    
 </script>
 </html>
