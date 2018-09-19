@@ -95,5 +95,36 @@
     const ninjia1Iter = NinjaGen1("skulk");
     const reault11 = ninjia1Iter.next();
     const result22 = ninjia1Iter.next("Hanzo");
+
+    //promise field
+    function getJSON(url){
+        return new Promise((resolve,reject)=>{
+          const request = new XMLHttpRequest();
+          request.open("GET",url);
+          request.onload = function(){
+              try{
+                  if(this.status === 200){
+                      resolve(JSON.parse(this.response));
+                  }
+                  else{
+                      reject(this.status +" "+this.statusText);
+                  }
+              }
+              catch(e){
+                  reject(e.message);
+              }
+          } 
+          request.onerror = function(){
+              reject(this.status+" "+this.statusText);
+          } 
+          request.send();
+        })
+    }
+    //with anywhere(nodejs) server ,we can get json from computer;
+    getJSON("data/ninjas.json").then(ninjas=>{
+            console.log(ninjas!==null,"ninjas obtained");
+            console.log(ninjas)
+        }).catch(e => fail("shouldn't be here:"+e));
+    
 </script>
 </html>
