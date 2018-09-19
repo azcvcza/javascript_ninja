@@ -25,5 +25,40 @@
     console.log(representative.name ==="komei","get the name property through a proxy)")
     representative.nickname = "fuck";
     console.log(representative.nickname);
+    //不使用代理 实现日记记录
+    function record(){
+        let _skillLevel = 0;
+        Object.defineProperty(this,'skillLevel',{
+            get:()=>{
+                console.log("skillLevel get method is called");
+                return _skillLevel;
+            },
+            set:(value)=>{
+                console.log("skillLevel set method is called");
+                _skillLevel = value;
+            }
+        });
+    }
+    const r = new record();
+    console.log("origin value:",r.skillLevel);
+    r.skillLevel = 4;
+    console.log("after",r.skillLevel);
+    //使用代理实现日志记录
+    function make_record(target){
+        return new Proxy(target,{
+            get:(target,property)=>{
+                console.log("reading:"+property);
+                return target[property];
+            },
+            set:(target,property,value)=>{
+                console.log("writing value "+value +" to "+property);
+                target[property]=value;
+            }
+        })
+    }
+    let r1 = {name:"yoshi"};
+    r1 = make_record(r1);
+    console.log(r1.name,"our ninja yoshi");
+    r1.weapon="sword";
 </script>
 </html>
