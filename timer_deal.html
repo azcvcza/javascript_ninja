@@ -16,7 +16,7 @@
     let iteration = 0;
 
     const table = document.getElementsByTagName("table")[0];
-    console.log(table)
+    
     setTimeout(
         function generateRows(){
             const base = chunkSize*iteration;
@@ -36,9 +36,18 @@
         }
     ,0)
 
-    table.addEventListener("click",function(e){
+    table.addEventListener("mouseover",function(e){
+        
         if(e.target.tagName.toLowerCase() === 'td'){
-            e.target.style.backgroundColor = "yellogreen";
+            
+            e.target.style.backgroundColor = "yellowgreen";
+        }
+    })
+    table.addEventListener("mouseleave",function(e){
+        
+        if(e.target.tagName.toLowerCase() === 'td'){
+            
+            e.target.style.backgroundColor = "transparent";
         }
     })
 </script>
