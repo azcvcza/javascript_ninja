@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Promise & event</title>
+</head>
+
+<body>
+    <button id="first">click first</button><button id="second">click second</button>
+</body>
+<script>
+    const first = document.getElementById("first");
+    const second = document.getElementById("second");
+    var i = 0;
+    first.addEventListener("click", function () {
+        Promise.resolve().then(function () {
+            console.log("now in promise");
+        })
+    })
+    second.addEventListener("click", function () {
+        console.log("in second ,no promise")
+    })
+   
+</script>
+
+</html>
