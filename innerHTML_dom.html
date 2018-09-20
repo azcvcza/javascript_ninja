@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>innerHTML_dom</title>
+</head>
+<body>
+    <div id="test"><b>helloworld</b>,p i'm a ninja</div>
+    <div id="test2"></div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        function insert(element,args,callback){
+            if(element.length){
+                const doc = element[0].ownerDocument || element[0];
+                const fragment = doc.createDocumentFragment();
+                const scripts = getNodes(args,doc,fragment);
+                const first = fragment.firstChild;
+
+                if(first){
+                    for(let i =0;element[i];i++){
+                        callback.call(root(element[i],first),i>0?fragment.cloneNode(true):fragment);
+                    }
+                }
+            }
+        }
+        const div = document.querySelectorAll("div");
+        insert(div,"<b>Name:</b>",function(fragment){
+            this.appendChild(fragment);
+        })
+        insert(div,"<span>First:</span>",function(fragment){
+            this.parentNode.insertBefore(fragment,this);
+        })
+    })
+</script>
+<script>
+    function getNodes(htmlString,doc,fragment){
+        const map={
+            "<td":[3,"<table><tbody><tr>","</tr></tbody></table"],
+            "<th":[3,"<table><tbody><tr>","</tr></tbody></table>"],
+            "<tr":[2,"<table><thead>","</thead></table>"],
+            "<option":[1,"<select mutiple>","</select>"],
+            "<legend":[1,"<fieldset>","</fieldset>"],
+            "<thead":[1,"<table>","</table>"],
+            "<tbody":[1,"<table>","</table>"],
+            "<tfoot":[1,"<table>","</table>"],
+            "<colgroup":[1,"<table>","</table>"],
+            "<caption":[1,"<table>",",/table>"],
+            "<col":[2,"<table><tbody></tbody><colgroup>","</colgroup></table>"]    
+        };
+        const tagName = htmlString.match(/<\w+/);
+        let mapEntry = tagName ? map[tagName[0]]:null;
+        if(!mapEntry){
+            mapEntry=[0,"",""];
+        }
+        let div = (doc || document).createElement("div");
+        div.innerHTML = mapEntry[1] + htmlString + mapEntry[2];
+        while(mapEntry[0]--){
+            div = div.lastChild;
+        }
+        if(fragment){
+            while(div.firstChild){
+                fragment.appendChild(div.firstChild);
+            }
+        }
+        return div.childNodes;
+    }
+</script>
+</html>
