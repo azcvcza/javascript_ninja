@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自定义事件</title>
+</head>
+<style>
+ #whirlything{
+     display:none;
+ }
+</style>
+<body>
+    <button id="clickMe">Start</button><img src="data/whirly-thing.gif" alt="" id="whirlything">
+</body>
+<script>
+    function triggerEvent(target,eventType,eventDetail){
+        const event = new CustomEvent(eventType,{
+            detail:eventDetail
+        });
+        target.dispatchEvent(event);
+    }
+    function performAjaxOperation(){
+        triggerEvent(document,"ajax-start",{url:'my-url'});
+        setTimeout(()=>{
+            triggerEvent(document,"ajax-complete",)
+        },5000)
+    }
+    const button = document.getElementById("clickMe");
+    button.addEventListener("click",()=>{
+        performAjaxOperation();
+    })
+    document.addEventListener("ajax-start",e=>{
+        document.getElementById("whirlything").style.display ="inline-block";
+        console.log(e,"we pass an event data");
+    })
+     document.addEventListener("ajax-complete",e=>{
+        document.getElementById("whirlything").style.display ="none";
+        console.log("complete");
+    })
+</script>
+</html>
