@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>timer deal with large work</title>
+</head>
+<body>
+    <table></table>
+</body>
+<script>
+    const rowCount = 20000;
+    const divideInto = 4;
+    const chunkSize = rowCount / divideInto;
+    let iteration = 0;
+
+    const table = document.getElementsByTagName("table")[0];
+    console.log(table)
+    setTimeout(
+        function generateRows(){
+            const base = chunkSize*iteration;
+            for(let i =0;i<chunkSize;i++){
+                const tr = document.createElement("tr");
+                for(let t=0;t<6;t++){
+                    const td = document.createElement("td");
+                    td.appendChild(document.createTextNode((i+base)+","+t+","+iteration));
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+            iteration++;
+            if(iteration<divideInto){
+                setTimeout(generateRows,0);
+            }
+        }
+    ,0)
+
+    table.addEventListener("click",function(e){
+        if(e.target.tagName.toLowerCase() === 'td'){
+            e.target.style.backgroundColor = "yellogreen";
+        }
+    })
+</script>
+</html>
